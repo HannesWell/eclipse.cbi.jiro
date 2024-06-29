@@ -23,17 +23,29 @@ jobs:
           node-version: 'latest'
       - name: 'Install required software'
         run: |
-          sudo apt-get update
+          #sudo apt-get update
           sudo apt-get install jq
           sudo apt-get install pass
-          echo 'Hello World'
-          npm install -g --save-dev hbs-cli
-          which hbs
-          npm install github:yasammez/hbs-cli#ed85bd9e10f54b23331a36b51a6dd4e4134fb9c1
+          set -x;
+          #npm install -g hbs-cli --loglevel verbose
+          #mkdir -p ~/.npm-root/bin/bin
+          #mkdir -p ~/.npm-root/cache
+          #echo "$(npm config get prefix)"
+          #npm config set prefix "$GITHUB_WORKSPACE/.npm-root/bin"
+          #npm config set cache "$GITHUB_WORKSPACE/.npm-root/cache"
+          #echo "$(npm config get prefix)" >> $GITHUB_PATH
+          #PATH=$(npm config get prefix):$PATH
+          #npm install -g hbs-cli --loglevel verbose
+          #which hbs
+          npm install --global github:yasammez/hbs-cli#ed85bd9e10f54b23331a36b51a6dd4e4134fb9c1 --loglevel verbose
+          npx hbs-cli --help
+          #npm link hbs-cli
+          ls .npm-root/bin/bin
+          ls /opt/hostedtoolcache/node/22.3.0/x64/bin
           echo 'which hbs again'
           which hbs
           eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
-          brew update
+          #brew update
           brew install jsonnet
           brew install yq
       - name: 'Build instance'
@@ -49,7 +61,7 @@ jobs:
           ./build/build-image.sh instances/eclipse.platform
           which hbs
           where hbs
-          cat instances/eclipse.platform/target/jenkins/configuration.yml
+          cat instances/    .platform/target/jenkins/configuration.yml
         working-directory: jiro
       - name: Archive production artifacts
         uses: actions/upload-artifact@v4
