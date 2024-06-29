@@ -42,8 +42,8 @@ if [[ -d "${jenkinsTemplateFolder}/${jenkinsActualVersion}" ]]; then
 fi
 
 jenkinsTheme="$(jq -r '.jenkins.theme' "${instance}/target/config.json")"
-echo "/* GENERATED FILE - DO NOT EDIT */" > "${target}/${jenkinsTheme}.css.override"
-hbs -s -D "${instance}/target/config.json" "${jenkinsTemplateFolder}/${jenkinsTheme}.css.hbs" >> "${target}/${jenkinsTheme}.css.override"
+#echo "/* GENERATED FILE - DO NOT EDIT */" > "${target}/${jenkinsTheme}.css.override"
+#hbs -s -D "${instance}/target/config.json" "${jenkinsTemplateFolder}/${jenkinsTheme}.css.hbs" >> "${target}/${jenkinsTheme}.css.override"
 
 displayName="$(jq -r '.project.displayName' "${instance}/target/config.json")"
 cat <<EOF > "${target}/title.js"
@@ -53,10 +53,14 @@ EOF
 mkdir -p "${target}/partials"
 "${SCRIPT_FOLDER}/gen-permissions.sh" "${instance}/target/config.json" > "${target}/partials/permissions.hbs"
 
+echo 'In gen-jenkins 3'
+
 # Expand instance name variables in jenkins/configuration.yml
 projectName="$(jq -r '.project.fullName' "${instance}/target/config.json")"
 expandedJenkinsConfig=$(mktemp)
 sed -e "s/&&INSTANCE_NAME&&/${projectName}/g" "${instance}/jenkins/configuration.yml" > "${expandedJenkinsConfig}"
+
+cat ${expandedJenkinsConfig}
 
 "${SCRIPT_FOLDER}/gen-yaml.sh" "${expandedJenkinsConfig}" "${jenkinsTemplateFolder}/configuration.yml.hbs" "${instance}/target/config.json" "${target}/partials" > "${target}/configuration.yml"
 

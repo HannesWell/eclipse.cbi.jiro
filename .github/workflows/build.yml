@@ -1,0 +1,60 @@
+name: Build JIRO instances
+on:
+  push:
+    branches: 
+      - '*'
+jobs:
+  build-jenkins:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: jiro
+      - uses: actions/checkout@v4
+        with:
+          repository: eclipse-cbi/jiro-agents
+          path: jiro-agents
+      - uses: actions/checkout@v4
+        with:
+          repository: eclipse-cbi/jiro-masters
+          path: jiro-masters
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 'latest'
+      - name: 'Install required software'
+        run: |
+          sudo apt-get update
+          sudo apt-get install jq
+          sudo apt-get install pass
+          npm install -g glob-promise@^6.0.3
+          npm install -g yasammez/hbs-cli#ed85bd9e10f54b23331a36b51a6dd4e4134fb9c1
+          eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+          brew update
+          brew install jsonnet
+          brew install yq
+      - name: 'Build instance'
+        env:
+          HOME: ./myHome
+          CBI_HOME: ./myCBIHome
+        run: |
+          eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+          mkdir -p "${HOME}/.cbi"
+          echo '{"password-store": {"cbi-dir": "~/.password-store/cbi"}}' > "${HOME}/.cbi/config"
+          #make image_eclipse.platform
+          ./build/build-image.sh instances/eclipse.platform
+          cat instances/eclipse.platform/target/jenkins/configuration.yml
+        working-directory: jiro
+      - name: Archive production artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-jenkins-config
+          path: |
+            jiro/instances/eclipse.platform
+      - name: commit changes
+        run: |
+          git config --global user.email "you@example.com"
+          git config --global user.name "Your Name"
+          git add * --all
+          git commit -m 'Re-build'
+          git push -f origin HEAD:rebuild-changes
+        working-directory: jiro
