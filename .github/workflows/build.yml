@@ -26,11 +26,18 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 'latest'
-#          cache: 'npm'
-#          cache-dependency-path: hbs-cli/package-lock.json
+          cache: 'npm'
+          cache-dependency-path: hbs-cli/package-lock.json
       - name: 'Install hbs'
         run: |
-          #npm ci --bin-links true
+          set -x
+          npm ci --bin-links true
+          npm install -g
+          npm list
+          npm list -g
+          ls -alF /opt/hostedtoolcache/node/22.3.0/x64/bin
+          ls
+          ls node_modules *
           #hbs --help 
         working-directory: 'hbs-cli'
       - name: 'Install required software'
@@ -43,6 +50,7 @@ jobs:
           npm install -g hbs-cli
           which hbs
           ls -alF /opt/hostedtoolcache/node/22.3.0/x64/bin
+          ls node_modules */*
           echo $PATH
           hbs --help
           hbs --version
