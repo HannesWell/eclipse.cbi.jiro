@@ -18,18 +18,30 @@ jobs:
         with:
           repository: eclipse-cbi/jiro-masters
           path: jiro-masters
+      - uses: actions/checkout@v4
+        with:
+          repository: yasammez/hbs-cli
+          ref: ed85bd9e10f54b23331a36b51a6dd4e4134fb9c1
+          path: hbs-cli
       - uses: actions/setup-node@v4
         with:
           node-version: 'latest'
+#          cache: 'npm'
+#          cache-dependency-path: hbs-cli/package-lock.json
+      - name: 'Install hbs'
+        run: |
+          npm ci
+        working-directory: 'hbs-cli'
       - name: 'Install required software'
         run: |
           #sudo apt-get update
           sudo apt-get install jq
           sudo apt-get install pass
           set -x;
-          npm install --global github:yasammez/hbs-cli#ed85bd9e10f54b23331a36b51a6dd4e4134fb9c1
-          npm exec --package=github:yasammez/hbs-cli#ed85bd9e10f54b23331a36b51a6dd4e4134fb9c1 -- hbs --help
-          npm exec --package=github:yasammez/hbs-cli#ed85bd9e10f54b23331a36b51a6dd4e4134fb9c1 -- hbs --version
+          #npm ci github:yasammez/hbs-cli#ed85bd9e10f54b23331a36b51a6dd4e4134fb9c1
+          echo $PATH
+          hbs --help
+          hbs --version
           alias hbs="npx github:yasammez/hbs-cli#ed85bd9e10f54b23331a36b51a6dd4e4134fb9c1 --"
           hbs --version
           eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
