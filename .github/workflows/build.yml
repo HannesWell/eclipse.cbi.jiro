@@ -36,9 +36,10 @@ jobs:
           npm list
           npm list -g
           ls -alF /opt/hostedtoolcache/node/22.3.0/x64/bin
-          ls
-          ls node_modules *
-          #hbs --help 
+          ls lib/
+          ln lib/index.js* hbs
+          echo "$GITHUB_WORKSPACE/hbs-cli" >> $GITHUB_PATH
+          #hbs --help
         working-directory: 'hbs-cli'
       - name: 'Install required software'
         run: |
