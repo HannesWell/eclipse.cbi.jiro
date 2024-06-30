@@ -27,19 +27,11 @@ jobs:
           sudo apt-get install jq
           sudo apt-get install pass
           set -x;
-          #npm install -g hbs-cli --loglevel verbose
-          #mkdir -p ~/.npm-root/bin/bin
-          #mkdir -p ~/.npm-root/cache
-          #echo "$(npm config get prefix)"
-          #npm config set prefix "$GITHUB_WORKSPACE/.npm-root/bin"
-          #npm config set cache "$GITHUB_WORKSPACE/.npm-root/cache"
-          #echo "$(npm config get prefix)" >> $GITHUB_PATH
-          #PATH=$(npm config get prefix):$PATH
-          #npm install -g hbs-cli --loglevel verbose
-          #which hbs
           npm install --global github:yasammez/hbs-cli#ed85bd9e10f54b23331a36b51a6dd4e4134fb9c1 --loglevel verbose
-          npx hbs-cli --help
-          npx hbs --version
+          npx hbs-cli -- --help
+          npx hbs-cli -- --version
+          alias hbs="npx hbs-cli --"
+          hbs --version
           eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
           #brew update
           brew install jsonnet
@@ -49,7 +41,10 @@ jobs:
           HOME: ./myHome
           CBI_HOME: ./myCBIHome
         run: |
+          set -x
           eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+          alias hbs="npx hbs-cli"
+          hbs --version
           mkdir -p "${HOME}/.cbi"
           echo '{"password-store": {"cbi-dir": "~/.password-store/cbi"}}' > "${HOME}/.cbi/config"
           #make image_eclipse.platform
