@@ -39,11 +39,7 @@ jobs:
           #which hbs
           npm install --global github:yasammez/hbs-cli#ed85bd9e10f54b23331a36b51a6dd4e4134fb9c1 --loglevel verbose
           npx hbs-cli --help
-          #npm link hbs-cli
-          ls .npm-root/bin/bin
-          ls /opt/hostedtoolcache/node/22.3.0/x64/bin
-          echo 'which hbs again'
-          which hbs
+          npx hbs --version
           eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
           #brew update
           brew install jsonnet
