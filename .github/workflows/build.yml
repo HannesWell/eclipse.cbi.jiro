@@ -30,7 +30,8 @@ jobs:
 #          cache-dependency-path: hbs-cli/package-lock.json
       - name: 'Install hbs'
         run: |
-          npm ci
+          #npm ci --bin-links true
+          #hbs --help 
         working-directory: 'hbs-cli'
       - name: 'Install required software'
         run: |
@@ -39,6 +40,9 @@ jobs:
           sudo apt-get install pass
           set -x;
           #npm ci github:yasammez/hbs-cli#ed85bd9e10f54b23331a36b51a6dd4e4134fb9c1
+          npm install -g hbs-cli
+          which hbs
+          ls -alF /opt/hostedtoolcache/node/22.3.0/x64/bin
           echo $PATH
           hbs --help
           hbs --version
