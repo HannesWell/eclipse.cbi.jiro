@@ -37,7 +37,7 @@ jobs:
           npm list -g
           ls -alF /opt/hostedtoolcache/node/22.3.0/x64/bin
           ls lib/
-          ln lib/index.js* hbs
+          ln lib/index.js hbs
           echo "$GITHUB_WORKSPACE/hbs-cli" >> $GITHUB_PATH
           #hbs --help
         working-directory: 'hbs-cli'
@@ -47,16 +47,17 @@ jobs:
           sudo apt-get install jq
           sudo apt-get install pass
           set -x;
+          hbs --version
           #npm ci github:yasammez/hbs-cli#ed85bd9e10f54b23331a36b51a6dd4e4134fb9c1
-          npm install -g hbs-cli
+          #npm install -g hbs-cli
           which hbs
-          ls -alF /opt/hostedtoolcache/node/22.3.0/x64/bin
-          ls node_modules */*
-          echo $PATH
-          hbs --help
-          hbs --version
-          alias hbs="npx github:yasammez/hbs-cli#ed85bd9e10f54b23331a36b51a6dd4e4134fb9c1 --"
-          hbs --version
+          #ls -alF /opt/hostedtoolcache/node/22.3.0/x64/bin
+          #ls node_modules */*
+          #echo $PATH
+          #hbs --help
+          #hbs --version
+          #alias hbs="npx github:yasammez/hbs-cli#ed85bd9e10f54b23331a36b51a6dd4e4134fb9c1 --"
+          #hbs --version
           eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
           #brew update
           brew install jsonnet
