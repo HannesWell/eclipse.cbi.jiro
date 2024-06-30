@@ -27,10 +27,10 @@ jobs:
           sudo apt-get install jq
           sudo apt-get install pass
           set -x;
-          npm install --global github:yasammez/hbs-cli#ed85bd9e10f54b23331a36b51a6dd4e4134fb9c1 --loglevel verbose
-          npx hbs-cli -- --help
-          npx hbs-cli -- --version
-          alias hbs="npx hbs-cli --"
+          npm install --global github:yasammez/hbs-cli#ed85bd9e10f54b23331a36b51a6dd4e4134fb9c1
+          npm exec --package=github:yasammez/hbs-cli#ed85bd9e10f54b23331a36b51a6dd4e4134fb9c1 -- hbs --help
+          npm exec --package=github:yasammez/hbs-cli#ed85bd9e10f54b23331a36b51a6dd4e4134fb9c1 -- hbs --version
+          alias hbs="npx github:yasammez/hbs-cli#ed85bd9e10f54b23331a36b51a6dd4e4134fb9c1 --"
           hbs --version
           eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
           #brew update
