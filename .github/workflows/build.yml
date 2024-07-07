@@ -20,7 +20,7 @@ jobs:
           path: jiro-masters
       - uses: actions/checkout@v4
         with:
-          repository: yasammez/hbs-cli
+          repository: heurtematte/hbs-cli
           ref: ed85bd9e10f54b23331a36b51a6dd4e4134fb9c1
           path: hbs-cli
       - uses: actions/setup-node@v4
@@ -32,11 +32,12 @@ jobs:
         run: |
           set -x
           npm ci --bin-links true
-          npm install -g
+          #npm install -g
           npm list
           npm list -g
-          ls -alF /opt/hostedtoolcache/node/22.3.0/x64/bin
-          ln lib/index.js hbs
+          #ls -alF /opt/hostedtoolcache/node/22.3.0/x64/bin
+          ln -s lib/index.js hbs
+          chmod +x hbs
           echo "$GITHUB_WORKSPACE/hbs-cli" >> $GITHUB_PATH
         working-directory: 'hbs-cli'
       - name: 'Install required software'
@@ -66,8 +67,7 @@ jobs:
           
           ./build/build-image.sh instances/eclipse.platform
           which hbs
-          where hbs
-          cat instances/    .platform/target/jenkins/configuration.yml
+          cat instances/eclipse.platform/target/jenkins/configuration.yml
         working-directory: jiro
       - name: Archive production artifacts
         uses: actions/upload-artifact@v4
