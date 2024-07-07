@@ -47,16 +47,14 @@ jobs:
           brew install yq
       - name: 'Build instance'
         env:
-          HOME: ./cbiHome
+          HOME: $GITHUB_WORKSPACE/cbiHome
         run: |
           set -x
           eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
-          hbs --version
           mkdir -p "${HOME}/.cbi"
-          echo '{"password-store": {"cbi-dir": "~/.password-store/cbi"}}' > "${HOME}/.cbi/config"
+          echo "{\"password-store\": {\"cbi-dir\": \"$GITHUB_WORKSPACE/cbiHome/password-store/cbi\"}}" > "${HOME}/.cbi/config"
           make image_eclipse.platform
           #./build/build-image.sh instances/eclipse.platform
-          which hbs
           cat instances/eclipse.platform/target/jenkins/configuration.yml
         working-directory: jiro
       - name: Archive production artifacts

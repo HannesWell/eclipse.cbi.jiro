@@ -19,13 +19,19 @@ SCRIPT_FOLDER="$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")"
 SCRIPT_NAME="$(basename "$(readlink -f "${BASH_SOURCE[0]}")")"
 
 LOCAL_CONFIG="${HOME}/.cbi/config"
+echo "LOCAL_CONFIG: $LOCAL_CONFIG"
 if [[ ! -f "${LOCAL_CONFIG}" ]]; then
   echo "ERROR: File '$(readlink -f "${LOCAL_CONFIG}")' does not exists"
   echo "Create one to configure the location of the password store. Example:"
   echo '{"password-store": {"cbi-dir": "~/.password-store/cbi"}}' | jq -M
 fi
+echo 'In gen-mvn-settings 1'
+
 PASSWORD_STORE_DIR="$(jq -r '.["password-store"]["cbi-dir"]' "${LOCAL_CONFIG}")"
+echo "In gen-mvn-settings 2 $PASSWORD_STORE_DIR"
+echo "next: ${PASSWORD_STORE_DIR/#~\//${HOME}/}"
 PASSWORD_STORE_DIR="$(readlink -f "${PASSWORD_STORE_DIR/#~\//${HOME}/}")"
+echo 'In gen-mvn-settings 3'
 export PASSWORD_STORE_DIR
 
 INSTANCE="${1:-}"
@@ -43,6 +49,8 @@ fi
 CONFIG="${INSTANCE}/target/config.json"
 WORKDIR="$(dirname "${CONFIG}")/.secrets/maven"
 SETTINGS_SECURITY_XML="${WORKDIR}/settings-security.xml"
+
+echo 'In gen-mvn-settings 4'
 
 gen_pw() {
   # If pwgen is not installed, use /dev/urandom instead

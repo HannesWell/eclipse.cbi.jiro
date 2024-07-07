@@ -39,9 +39,15 @@ mkdir -p "$(dirname "${config}")/.secrets/k8s"
 
 jsonnet -m "${target}" "${instance}/jiro.jsonnet"
 
+echo 'In gen-config 3.1'
+
 "${SCRIPT_FOLDER}/gen-mvn-settings.sh" "${instance}"
+echo 'In gen-config 3.2'
 "${SCRIPT_FOLDER}/gen-gradle-properties.sh" "${instance}"
+echo 'In gen-config 3.3'
 "${SCRIPT_FOLDER}/gen-sbt-properties.sh" "${instance}"
+
+echo 'In gen-config 4'
 
 # if jiro_phase2.jsonnet file is present in instance, then use it for generation phase 2
 # (to override some defaults in this phase)
