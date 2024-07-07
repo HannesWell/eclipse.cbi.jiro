@@ -3,6 +3,8 @@
     fullName: "eclipse.platform",
     displayName: "Eclipse Platform",
     resourcePacks: 4,
+    # workspacePrefix must be individual among all JIPPs that link the eclipse.platform.releng/jenkins/configuration.yml
+    workspacePrefix: "platform",
   },
   jenkins+: {
     plugins+: [

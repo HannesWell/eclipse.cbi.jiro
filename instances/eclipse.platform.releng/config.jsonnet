@@ -6,6 +6,8 @@ local permissionsTemplates = import '../../templates/permissions.libsonnet';
     displayName: "Eclipse Platform Releng",
     resourcePacks: 5,
     unixGroupName: "eclipse.platform",
+    # workspacePrefix must be individual among all JIPPs that link the eclipse.platform.releng/jenkins/configuration.yml
+    workspacePrefix: "releng",
   },
   jenkins+: {
     plugins+: [
