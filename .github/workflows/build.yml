@@ -32,10 +32,6 @@ jobs:
         run: |
           set -x
           npm ci --bin-links true
-          #npm install -g
-          npm list
-          npm list -g
-          #ls -alF /opt/hostedtoolcache/node/22.3.0/x64/bin
           ln -s lib/index.js hbs
           chmod +x hbs
           echo "$GITHUB_WORKSPACE/hbs-cli" >> $GITHUB_PATH
@@ -45,27 +41,21 @@ jobs:
           #sudo apt-get update
           sudo apt-get install jq
           sudo apt-get install pass
-          set -x;
-          which hbs
-          hbs --version
           eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
           #brew update
           brew install jsonnet
           brew install yq
       - name: 'Build instance'
         env:
-          HOME: ./myHome
-          CBI_HOME: ./myCBIHome
+          HOME: ./cbiHome
         run: |
           set -x
           eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
-          alias hbs="npx hbs-cli"
           hbs --version
           mkdir -p "${HOME}/.cbi"
           echo '{"password-store": {"cbi-dir": "~/.password-store/cbi"}}' > "${HOME}/.cbi/config"
-          #make image_eclipse.platform
-          
-          ./build/build-image.sh instances/eclipse.platform
+          make image_eclipse.platform
+          #./build/build-image.sh instances/eclipse.platform
           which hbs
           cat instances/eclipse.platform/target/jenkins/configuration.yml
         working-directory: jiro
