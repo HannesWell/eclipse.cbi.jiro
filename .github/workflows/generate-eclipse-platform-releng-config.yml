@@ -58,4 +58,6 @@ jobs:
           ./build/gen-k8s.sh "${instance}"
 
       - name: Verify generated files are up-to-date
-        run: git diff --exit-code instances/eclipse.platform.releng/target/
+        run: |
+          git diff --exit-code instances/eclipse.platform.releng/target/ || \
+            (echo "Error: Generated files do not match committed versions. Please regenerate configuration files locally." && exit 1)
