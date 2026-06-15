@@ -1,0 +1,63 @@
+name: 'Generate eclipse.platform.releng configuration'
+
+on:
+  push:
+    paths:
+      - 'instances/eclipse.platform.releng/**.jsonnet'
+      - 'instances/eclipse.platform.releng/jenkins/**'
+      - 'instances/eclipse.platform.releng/k8s/master-known-hosts.yml'
+      - 'templates/**'
+  pull_request:
+    paths:
+      - 'instances/eclipse.platform.releng/**.jsonnet'
+      - 'instances/eclipse.platform.releng/jenkins/**'
+      - 'instances/eclipse.platform.releng/k8s/master-known-hosts.yml'
+      - 'templates/**'
+  workflow_dispatch:
+
+jobs:
+  generate-config:
+    name: Generate configuration
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+
+      - name: Install jsonnet and jq
+        run: sudo apt-get install -y jsonnet jq
+
+      - name: Install hbs-cli
+        run: npm install -g hbs-cli
+
+      - name: Install yq
+        env:
+          YQ_VERSION: 'v4.44.3'
+        run: |
+          sudo wget -qO /usr/local/bin/yq "https://github.com/mikefarah/yq/releases/download/${YQ_VERSION}/yq_linux_amd64"
+          sudo chmod +x /usr/local/bin/yq
+
+      - name: Generate configuration files
+        run: |
+          instance="instances/eclipse.platform.releng"
+          target="${instance}/target"
+
+          mkdir -p "${target}/k8s"
+          mkdir -p "${target}/.secrets/k8s"
+
+          # Phase 1: generate config.json and k8s JSON files from jiro.jsonnet
+          jsonnet -m "${target}" "${instance}/jiro.jsonnet"
+
+          # Phase 2: generate remaining Kubernetes configuration files
+          jsonnet -m "${target}" -J "${target}" "${instance}/jiro_phase2.jsonnet"
+
+          # Generate Jenkins configuration files (configuration.yml, css, permissions, etc.)
+          ./build/gen-jenkins.sh "${instance}"
+
+          # Generate Kubernetes configmap from Jenkins configuration
+          ./build/gen-k8s.sh "${instance}"
+
+      - name: Verify generated files are up-to-date
+        run: |
+          git diff --exit-code instances/eclipse.platform.releng/target/ || \
+            (echo "Error: Generated files do not match committed versions. Please regenerate configuration files locally." && exit 1)
